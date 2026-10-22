@@ -56,6 +56,7 @@ before update on public.site_settings
 for each row execute function public.touch_updated_at();
 
 revoke all on function public.touch_updated_at() from public, anon, authenticated;
+grant execute on function public.touch_updated_at() to authenticated;
 
 create or replace function public.is_owner()
 returns boolean
@@ -99,7 +100,7 @@ create policy projects_authenticated_read
 on public.projects
 for select
 to authenticated
-using (true);
+using (public.is_owner());
 
 create policy projects_owner_insert
 on public.projects
